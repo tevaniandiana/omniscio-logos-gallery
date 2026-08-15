@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Omniscio · Scroll Scenario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08090F;
+    --bg-2: #05060B;
+    --surface: rgba(255,255,255,0.03);
+    --line: rgba(255,255,255,0.08);
+    --text: #F0F4FB;
+    --text-2: #A9B0C0;
+    --text-3: #6A7285;
+    --cyan: #5BE3FF;
+    --violet: #A76BFF;
+    --violet-deep: #7B3FFF;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background:
+      radial-gradient(60% 45% at 95% 5%,  rgba(58,47,92,0.45)  0%, transparent 60%),
+      radial-gradient(60% 45% at  5% 95%, rgba(34,25,61,0.55)  0%, transparent 60%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 80px 24px 120px;
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  header {
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 64px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 20px;
+  }
+  h1 {
+    font-size: clamp(40px, 5.4vw, 68px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  header p {
+    font-size: 17px;
+    color: var(--text-2);
+    max-width: 62ch;
+  }
+  header .link-line {
+    margin-top: 28px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  header .link-line a {
+    color: var(--cyan);
+    text-decoration: none;
+    border-bottom: 1px dashed rgba(91,227,255,0.4);
+    padding-bottom: 1px;
+  }
+  header .link-line a:hover { border-bottom-style: solid; }
+
+  .act {
+    margin-top: 88px;
+  }
+  .act:first-of-type { margin-top: 0; }
+  .act-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 40px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  .act-tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--violet);
+  }
+  .act-title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .act-sub {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    letter-spacing: 0.04em;
+  }
+
+  .beat {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 24px;
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .beat:last-child { border-bottom: none; }
+  .beat-num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-3);
+    padding-top: 4px;
+    letter-spacing: 0.05em;
+  }
+  .beat-body h3 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .beat-copy {
+    display: block;
+    font-size: 17px;
+    color: var(--text);
+    font-style: italic;
+    padding: 12px 16px;
+    background: var(--surface);
+    border-left: 2px solid var(--cyan);
+    margin-bottom: 12px;
+    border-radius: 2px;
+  }
+  .beat-meta {
+    font-size: 14.5px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+  .beat-meta strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .beat-meta + .beat-meta { margin-top: 6px; }
+
+  .status-bar {
+    margin-top: 88px;
+    padding: 24px 28px;
+    background: linear-gradient(90deg, rgba(91,227,255,0.06), rgba(167,107,255,0.06));
+    border: 1px solid rgba(91,227,255,0.15);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .status-bar .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 12px rgba(91,227,255,0.6);
+  }
+  .status-bar .label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .status-bar .value {
+    font-size: 15px;
+    color: var(--text);
+  }
+  .status-bar .sep {
+    color: var(--text-3);
+    opacity: 0.4;
+  }
+
+  footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">OMNISCIO · SCROLL SCENARIO</div>
+    <h1>The scroll,<br/>frame by frame.</h1>
+    <p>Four acts. Sphere is the through-line — hero, then supporting, then vault, then hero again. Below is the full page we're building toward.</p>
+    <div class="link-line">
+      Live prototype (beats 1–2 built) → <a href="https://tevaniandiana.github.io/omniscio-logos-gallery/scroll-v2.html" target="_blank" rel="noopener">scroll-v2.html</a>
+    </div>
+  </header>
+
+  <section class="act">
+    <div class="act-header">
+      <span class="act-tag">ACT I</span>
+      <span class="act-title">The Opener</span>
+      <span class="act-sub">6 beats · pure sphere + type</span>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">01</div>
+      <div class="beat-body">
+        <h3>Cold open</h3>
+        <span class="beat-copy">"Omniscio is for people addicted to leverage."</span>
+        <div class="beat-meta"><strong>Sphere:</strong> huge moon-rise from bottom, ~30% peek. Breathing, slight drift up on scroll.</div>
+        <div class="beat-meta"><strong>Below:</strong> Download Omniscio button.</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">02</div>
+      <div class="beat-body">
+        <h3>The promise</h3>
+        <span class="beat-copy">"You, times a thousand."</span>
+        <div class="beat-meta"><strong>Big line:</strong> 1,000× — massive, solid white.</div>
+        <div class="beat-meta"><strong>Rotator:</strong> the engineer · marketer · founder · operator (auto-cycles, cinematic rise + blur).</div>
+        <div class="beat-meta"><strong>Sphere:</strong> faded out — pure type moment.</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">03</div>
+      <div class="beat-body">
+        <h3>The what</h3>
+        <span class="beat-copy">"Run a hundred agents from your phone."</span>
+        <div class="beat-meta"><strong>Sphere:</strong> returns small, bottom-right corner.</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">04</div>
+      <div class="beat-body">
+        <h3>The loop</h3>
+        <span class="beat-copy">"Delegate. Decide. Done. Do it again."</span>
+        <div class="beat-meta"><strong>Sphere:</strong> traces a 4-corner loop — one word per corner. Motion IS the meaning.</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">05</div>
+      <div class="beat-body">
+        <h3>The payoff</h3>
+        <span class="beat-copy">"Get more done than you ever have — with less effort than you thought possible."</span>
+        <div class="beat-meta"><strong>Sphere:</strong> expands until it fills the viewport as a soft aurora glow. The abundance moment.</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">06</div>
+      <div class="beat-body">
+        <h3>The turn</h3>
+        <span class="beat-copy">"Fair warning: you'll never be able to work the old way."</span>
+        <div class="beat-meta"><strong>Sphere:</strong> contracts to a hot white pinpoint dead center on near-black. Fades to black — hands into Act II.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="act">
+    <div class="act-header">
+      <span class="act-tag">ACT II</span>
+      <span class="act-title">The Product</span>
+      <span class="act-sub">7 sections · sphere plays supporting roles</span>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">01</div>
+      <div class="beat-body">
+        <h3>Unified Inbox</h3>
+        <div class="beat-meta"><strong>Moment:</strong> real Omniscio inbox mockup — session rows with status dots, one row lifting with a delivery.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> quiet signature, or sitting behind the inbox as the source it emanates from.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "Every agent, every session, in one place."</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">02</div>
+      <div class="beat-body">
+        <h3>Plain Speak</h3>
+        <div class="beat-meta"><strong>Moment:</strong> side-by-side. Left = raw terminal error. Right = Omniscio's plain-English translation.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> absent. This is a text-vs-text comparison.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "In your language. Not the machine's."</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">03</div>
+      <div class="beat-body">
+        <h3>Software Factory</h3>
+        <div class="beat-meta"><strong>Moment:</strong> grid of parallel workstreams — mini-tiles, each an agent shipping something. Green ticks cascade.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> central conductor, small, glowing.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "A whole team, shipping in parallel."</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">04</div>
+      <div class="beat-body">
+        <h3>Automate everything — even itself</h3>
+        <div class="beat-meta"><strong>Moment:</strong> cron cards stack up. Then a card appears: "Omniscio suggests: 'Want me to auto-triage bugs from Slack?'" — automation writes itself.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> clockwork engine behind the cards, rotating ring.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "Runs on a schedule. Wakes on events. Even writes its own automations."</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">05</div>
+      <div class="beat-body">
+        <h3>Run it from your phone</h3>
+        <div class="beat-meta"><strong>Moment:</strong> iPhone silhouette, Omniscio approval on the lockscreen, glowing Approve button.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> on the phone's lockscreen wallpaper.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "Approve from the beach. Or the bathroom."</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">06</div>
+      <div class="beat-body">
+        <h3>Any AI, no lock-in — the Bake-Off</h3>
+        <div class="beat-meta"><strong>Moment:</strong> three panels side-by-side, same prompt racing through three models. Bottom bar: "Pick the winner."</div>
+        <div class="beat-meta"><strong>Sphere:</strong> central + 3 smaller neutral orbs, each labeled with a model class.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "Ask any model. Or ask them all — and pick the winner."</div>
+      </div>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">07</div>
+      <div class="beat-body">
+        <h3>Built for speed</h3>
+        <div class="beat-meta"><strong>Moment:</strong> ⌘K spotlight overlay, quick-reply chips on an approval card, right-click "Send to Omniscio" from Chrome.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> absent or tiny signature — this section is about <em>your</em> speed.</div>
+        <div class="beat-meta"><strong>Copy:</strong> "Hotkey. Quick reply. Fire from anywhere."</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="act">
+    <div class="act-header">
+      <span class="act-tag">ACT III</span>
+      <span class="act-title">Control</span>
+      <span class="act-sub">1 section · sphere as vault</span>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">01</div>
+      <div class="beat-body">
+        <h3>It's all yours</h3>
+        <div class="beat-meta"><strong>Moment:</strong> vault/dashboard — local-first badge, your API keys, spend cap slider, approval-required toggles, undo timeline. Each control lights up as scroll advances.</div>
+        <div class="beat-meta"><strong>Sphere:</strong> sits inside a translucent glass vault frame — visually contained, "under your control."</div>
+        <div class="beat-meta"><strong>Copy:</strong> "Local-first. Your keys. Your caps. Nothing ships without your OK."</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="act">
+    <div class="act-header">
+      <span class="act-tag">ACT IV</span>
+      <span class="act-title">Final CTA</span>
+      <span class="act-sub">Parked · design after Act II + III are locked</span>
+    </div>
+
+    <div class="beat">
+      <div class="beat-num">01</div>
+      <div class="beat-body">
+        <h3>The ask</h3>
+        <span class="beat-copy">"Stop babysitting. Start orchestrating."</span>
+        <div class="beat-meta"><strong>Sphere:</strong> returns to hero scale, brightest it's been all page.</div>
+        <div class="beat-meta"><strong>CTA:</strong> Download Omniscio.</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="status-bar">
+    <span class="dot"></span>
+    <span class="label">Built</span>
+    <span class="value">Opener beats 1–2</span>
+    <span class="sep">·</span>
+    <span class="label">Next</span>
+    <span class="value">Beat 3, then finish opener → Act II</span>
+  </div>
+
+  <footer>
+    Omniscio · Scroll Scenario · v1 · Aug 15 2026
+  </footer>
+
+</div>
+</body>
+</html>
