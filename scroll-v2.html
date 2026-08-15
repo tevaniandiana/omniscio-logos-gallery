@@ -131,8 +131,8 @@
 
   /* SCENES */
   section { position: relative; width: 100%; z-index: 10; }
-  .scene-1 { height: 130vh; padding: 0 6vw; }
-  .scene-2 { height: 160vh; padding: 0; }
+  .scene-1 { height: 100vh; padding: 0 6vw; }
+  .scene-2 { height: 130vh; padding: 0; }
 
   /* BEAT 1 · "Omniscio is for people addicted to leverage." */
   .beat-1 {
@@ -289,7 +289,6 @@
     line-height: 0.88;
     letter-spacing: -0.055em;
     color: var(--text);
-    padding-bottom: 0.06em;
     display: inline-flex;
     align-items: baseline;
     justify-content: center;
@@ -306,7 +305,8 @@
   /* rotating role — big, white, cinematic blur+rise entrance/exit */
   .beat-2 .roles {
     position: relative;
-    height: 1.4em;
+    height: 1em;
+    line-height: 1;
     width: 100%;
     display: flex; align-items: center; justify-content: center;
     font-size: clamp(42px, 5.6vw, 96px);
@@ -318,6 +318,7 @@
     filter: blur(14px);
     font-family: var(--font-brand);
     font-weight: 600;
+    line-height: 1;
     letter-spacing: -0.028em;
     color: var(--text);
     white-space: nowrap;
@@ -404,9 +405,9 @@
 const KEYFRAMES = [
   // scrollY in vh · x/vw · y/vh · scale · opacity
   { s: 0,   x: 0, y: 118, scale: 2.50, o: 1    },  // beat 1 · hero moon-rise
-  { s: 55,  x: 0, y: 110, scale: 2.42, o: 0.94 },  // subtle rise + tiny dim as you scroll
-  { s: 100, x: 0, y: 60,  scale: 1.4,  o: 0    },  // sphere shrinks + fades away
-  { s: 900, x: 0, y: 60,  scale: 1.4,  o: 0    }   // beat 2 · sphere hidden (pure type)
+  { s: 25,  x: 0, y: 112, scale: 2.44, o: 0.95 },  // subtle rise as you scroll
+  { s: 70,  x: 0, y: 55,  scale: 1.4,  o: 0    },  // sphere shrinks + fades away
+  { s: 900, x: 0, y: 55,  scale: 1.4,  o: 0    }   // beat 2 · sphere hidden (pure type)
 ];
 
 const easeInOutCubic = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2;
@@ -442,7 +443,7 @@ function updateSphere() {
 
   // fade beat-2 copy in as we approach it
   const beat2 = document.getElementById('beat2');
-  if (scrollYvh > 90) beat2.classList.add('in');
+  if (scrollYvh > 50) beat2.classList.add('in');
   else beat2.classList.remove('in');
 
   rafPending = null;
