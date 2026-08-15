@@ -403,10 +403,10 @@
 
 const KEYFRAMES = [
   // scrollY in vh · x/vw · y/vh · scale · opacity
-  { s: 0,   x: 0, y: 118, scale: 2.5, o: 1 },  // beat 1 · hero moon-rise
-  { s: 55,  x: 0, y: 118, scale: 2.5, o: 1 },  // hold beat 1
-  { s: 100, x: 0, y: 60,  scale: 1.4, o: 0 },  // sphere shrinks + fades away
-  { s: 900, x: 0, y: 60,  scale: 1.4, o: 0 }   // beat 2 · sphere hidden (pure type)
+  { s: 0,   x: 0, y: 118, scale: 2.50, o: 1    },  // beat 1 · hero moon-rise
+  { s: 55,  x: 0, y: 110, scale: 2.42, o: 0.94 },  // subtle rise + tiny dim as you scroll
+  { s: 100, x: 0, y: 60,  scale: 1.4,  o: 0    },  // sphere shrinks + fades away
+  { s: 900, x: 0, y: 60,  scale: 1.4,  o: 0    }   // beat 2 · sphere hidden (pure type)
 ];
 
 const easeInOutCubic = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2;
