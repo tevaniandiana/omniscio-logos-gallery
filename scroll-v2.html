@@ -132,7 +132,8 @@
   /* SCENES */
   section { position: relative; width: 100%; z-index: 10; }
   .scene-1 { height: 100vh; padding: 0 6vw; }
-  .scene-2 { height: 130vh; padding: 0; }
+  .scene-2 { height: 150vh; padding: 0; }
+  .scene-3 { height: 170vh; padding: 0; }
 
   /* BEAT 1 · "Omniscio is for people addicted to leverage." */
   .beat-1 {
@@ -350,10 +351,235 @@
     font-weight: 700;
   }
 
+  /* BEAT 3 · "Run a hundred agents from your phone." — copy left, phone right */
+  .beat-3 {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6vw;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 900ms ease, transform 900ms ease;
+    z-index: 15;
+  }
+  .beat-3.in { opacity: 1; transform: translateY(0); }
+  .beat-3-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(48px, 6vw, 120px);
+    max-width: 1400px;
+    width: 100%;
+  }
+  .beat-3 .copy {
+    flex: 1;
+    max-width: 14ch;
+  }
+  .beat-3 .copy h2 {
+    font-family: var(--font-brand);
+    font-weight: 700;
+    font-size: clamp(48px, 6vw, 104px);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+    color: var(--text);
+  }
+  .beat-3 .copy h2 .accent {
+    background: linear-gradient(96deg, var(--accent-a) 0%, var(--accent-b) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* THE PHONE — tilted iPhone silhouette with dark bezel + real Omniscio inbox */
+  .beat-3 .phone-wrap {
+    flex: none;
+    perspective: 1400px;
+  }
+  .beat-3 .phone {
+    width: clamp(260px, 22vw, 360px);
+    aspect-ratio: 375 / 780;
+    background: linear-gradient(160deg, #1E1638 0%, #0B0D14 55%, #08090F 100%);
+    border-radius: clamp(36px, 3.2vw, 48px);
+    padding: clamp(9px, 0.8vw, 13px);
+    border: 1.5px solid rgba(240, 244, 251, 0.10);
+    box-shadow:
+      0 40px 100px rgba(0, 0, 0, 0.60),
+      0 0 60px rgba(91, 227, 255, 0.20),
+      0 0 130px rgba(123, 63, 255, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    transform: rotateY(-11deg) rotateX(6deg) rotateZ(-1.5deg);
+    transform-style: preserve-3d;
+    position: relative;
+  }
+  .beat-3 .phone-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: clamp(28px, 2.4vw, 38px);
+    overflow: hidden;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(123, 63, 255, 0.14), transparent 70%),
+      linear-gradient(180deg, #0A0C15 0%, #06070C 100%);
+  }
+  /* Dynamic island */
+  .beat-3 .phone-island {
+    position: absolute;
+    top: clamp(9px, 0.8vw, 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34%;
+    height: 4.1%;
+    background: #000;
+    border-radius: 999px;
+    z-index: 20;
+  }
+  /* Status bar */
+  .beat-3 .phone-status {
+    position: absolute;
+    top: clamp(11px, 1vw, 14px);
+    left: 0; right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 clamp(16px, 1.4vw, 22px);
+    font-family: var(--font-mono);
+    font-size: clamp(10px, 0.72vw, 11.5px);
+    font-weight: 600;
+    color: var(--text);
+    z-index: 15;
+  }
+  .beat-3 .phone-status .icons {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .beat-3 .phone-status .icons svg { display: block; }
+  /* Header */
+  .beat-3 .phone-header {
+    padding: clamp(38px, 3.4vw, 52px) clamp(15px, 1.3vw, 20px) clamp(10px, 0.9vw, 14px);
+    border-bottom: 1px solid rgba(240, 244, 251, 0.06);
+  }
+  .beat-3 .phone-title {
+    font-family: var(--font-brand);
+    font-weight: 700;
+    font-size: clamp(18px, 1.4vw, 22px);
+    letter-spacing: 0.02em;
+    color: var(--text);
+  }
+  .beat-3 .phone-subtitle {
+    font-family: var(--font-mono);
+    font-size: clamp(9px, 0.62vw, 10.5px);
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-top: clamp(3px, 0.3vw, 5px);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .beat-3 .phone-subtitle .accent {
+    color: #F5B34C;
+    font-weight: 600;
+  }
+  /* Session cards list */
+  .beat-3 .phone-list {
+    padding: clamp(9px, 0.8vw, 12px) clamp(9px, 0.8vw, 12px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(6px, 0.55vw, 8px);
+  }
+  .beat-3 .phone-card {
+    display: flex;
+    align-items: flex-start;
+    gap: clamp(7px, 0.65vw, 10px);
+    padding: clamp(9px, 0.85vw, 13px) clamp(10px, 0.95vw, 14px);
+    border-radius: clamp(8px, 0.7vw, 11px);
+    background: rgba(240, 244, 251, 0.035);
+    border: 1px solid rgba(240, 244, 251, 0.055);
+  }
+  .beat-3 .phone-card.alert {
+    background: rgba(245, 179, 76, 0.09);
+    border-color: rgba(245, 179, 76, 0.30);
+  }
+  .beat-3 .phone-dot {
+    width: clamp(6px, 0.55vw, 8px);
+    height: clamp(6px, 0.55vw, 8px);
+    border-radius: 50%;
+    background: #3DDC97;
+    box-shadow: 0 0 8px rgba(61, 220, 151, 0.55);
+    flex: none;
+    margin-top: clamp(4px, 0.35vw, 6px);
+  }
+  .beat-3 .phone-dot.amber {
+    background: #F5B34C;
+    box-shadow: 0 0 8px rgba(245, 179, 76, 0.65);
+    animation: phoneDotPulse 1.6s ease-in-out infinite;
+  }
+  @keyframes phoneDotPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.35); }
+  }
+  .beat-3 .phone-cardtext { flex: 1; min-width: 0; }
+  .beat-3 .phone-cardtitle {
+    font-family: var(--font-body);
+    font-weight: 500;
+    font-size: clamp(10.5px, 0.82vw, 12.5px);
+    line-height: 1.32;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .beat-3 .phone-cardtitle code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: #FF7B7B;
+    background: rgba(255, 123, 123, 0.08);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+  .beat-3 .phone-cardmeta {
+    font-family: var(--font-mono);
+    font-size: clamp(9px, 0.6vw, 10px);
+    color: var(--text-dim);
+    margin-top: clamp(2px, 0.2vw, 3px);
+    letter-spacing: 0.03em;
+  }
+  .beat-3 .phone-actions {
+    display: flex;
+    gap: clamp(4px, 0.4vw, 6px);
+    margin-top: clamp(6px, 0.55vw, 9px);
+  }
+  .beat-3 .phone-btn {
+    padding: clamp(4px, 0.35vw, 6px) clamp(9px, 0.85vw, 13px);
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: clamp(9.5px, 0.7vw, 11px);
+    border: 0;
+    cursor: pointer;
+  }
+  .beat-3 .phone-btn.approve {
+    background: linear-gradient(96deg, var(--accent-a) 0%, var(--accent-b) 100%);
+    color: #08090F;
+  }
+  .beat-3 .phone-btn.deny {
+    background: rgba(240, 244, 251, 0.06);
+    color: var(--text);
+    border: 1px solid rgba(240, 244, 251, 0.14);
+  }
+
+  @media (max-width: 860px) {
+    .beat-3-inner { flex-direction: column; gap: 40px; }
+    .beat-3 .copy { max-width: 100%; text-align: center; }
+    .beat-3 .phone { transform: rotateY(0deg) rotateX(0deg); }
+  }
+
   @media (max-width: 600px) {
     .beat-2 .number { font-size: clamp(96px, 26vw, 200px); }
     .beat-2 .roles { font-size: clamp(30px, 8vw, 52px); }
     .beat-1 h1 { font-size: clamp(36px, 9vw, 72px); }
+    .beat-3 .copy h2 { font-size: clamp(36px, 9vw, 60px); }
   }
 </style>
 </head>
@@ -396,6 +622,87 @@
   </div>
 </section>
 
+<!-- Beat 3 · Run a hundred agents from your phone · copy + tilted phone mockup -->
+<section class="scene-3">
+  <div class="beat-3" id="beat3">
+    <div class="beat-3-inner">
+      <div class="copy">
+        <h2>Run a hundred agents<br><span class="accent">from your phone</span>.</h2>
+      </div>
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-island"></div>
+            <div class="phone-status">
+              <span>9:41</span>
+              <span class="icons">
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="currentColor" aria-hidden="true">
+                  <rect x="0" y="7" width="2" height="3" rx="0.5"/>
+                  <rect x="3" y="5" width="2" height="5" rx="0.5"/>
+                  <rect x="6" y="3" width="2" height="7" rx="0.5"/>
+                  <rect x="9" y="0" width="2" height="10" rx="0.5"/>
+                </svg>
+                <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true">
+                  <path d="M7 8.5v.01M2.5 5.5a6.5 6.5 0 0 1 9 0M4.5 7a3.5 3.5 0 0 1 5 0"/>
+                </svg>
+                <svg width="20" height="10" viewBox="0 0 22 10" fill="none" stroke="currentColor" aria-hidden="true">
+                  <rect x="0.5" y="0.5" width="18" height="9" rx="2" stroke-width="1"/>
+                  <rect x="19.5" y="3" width="1.5" height="4" rx="0.5" fill="currentColor"/>
+                  <rect x="2" y="2" width="14" height="6" rx="1" fill="currentColor"/>
+                </svg>
+              </span>
+            </div>
+            <div class="phone-header">
+              <div class="phone-title">Omniscio</div>
+              <div class="phone-subtitle">Inbox <span class="accent">· 1 waiting</span></div>
+            </div>
+            <div class="phone-list">
+              <div class="phone-card alert">
+                <div class="phone-dot amber"></div>
+                <div class="phone-cardtext">
+                  <div class="phone-cardtitle">Claude wants to run <code>rm&nbsp;-rf&nbsp;./build</code></div>
+                  <div class="phone-actions">
+                    <button class="phone-btn approve" type="button">Approve</button>
+                    <button class="phone-btn deny" type="button">Deny</button>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-dot"></div>
+                <div class="phone-cardtext">
+                  <div class="phone-cardtitle">Building landing page</div>
+                  <div class="phone-cardmeta">3s ago</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-dot"></div>
+                <div class="phone-cardtext">
+                  <div class="phone-cardtitle">Weekly digest complete</div>
+                  <div class="phone-cardmeta">1m ago</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-dot"></div>
+                <div class="phone-cardtext">
+                  <div class="phone-cardtitle">PR review · running</div>
+                  <div class="phone-cardmeta">4m ago</div>
+                </div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-dot"></div>
+                <div class="phone-cardtext">
+                  <div class="phone-cardtitle">Auto-triage · idle</div>
+                  <div class="phone-cardmeta">12m ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <script>
 /* ==================================================================
    Sphere scroll choreography — 2 beats
@@ -405,10 +712,12 @@
 
 const KEYFRAMES = [
   // scrollY in vh · x/vw · y/vh · scale · opacity
-  { s: 0,   x: 0, y: 118, scale: 2.50, o: 1    },  // beat 1 · hero moon-rise
-  { s: 25,  x: 0, y: 112, scale: 2.44, o: 0.95 },  // subtle rise as you scroll
-  { s: 70,  x: 0, y: 55,  scale: 1.4,  o: 0    },  // sphere shrinks + fades away
-  { s: 900, x: 0, y: 55,  scale: 1.4,  o: 0    }   // beat 2 · sphere hidden (pure type)
+  { s: 0,   x: 0,  y: 118, scale: 2.50, o: 1    },  // beat 1 · hero moon-rise
+  { s: 25,  x: 0,  y: 112, scale: 2.44, o: 0.95 },  // subtle rise as you scroll
+  { s: 70,  x: 0,  y: 55,  scale: 1.4,  o: 0    },  // sphere fades away
+  { s: 200, x: 0,  y: 55,  scale: 1.4,  o: 0    },  // beat 2 · sphere hidden
+  { s: 250, x: 30, y: 30,  scale: 0.34, o: 1    },  // beat 3 · sphere returns small bottom-right
+  { s: 900, x: 30, y: 30,  scale: 0.34, o: 1    }   // hold beat 3
 ];
 
 const easeInOutCubic = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2;
@@ -446,6 +755,11 @@ function updateSphere() {
   const beat2 = document.getElementById('beat2');
   if (scrollYvh > 50) beat2.classList.add('in');
   else beat2.classList.remove('in');
+
+  // fade beat-3 in as we approach scene-3
+  const beat3 = document.getElementById('beat3');
+  if (scrollYvh > 210) beat3.classList.add('in');
+  else beat3.classList.remove('in');
 
   rafPending = null;
 }
