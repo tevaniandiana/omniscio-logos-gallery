@@ -473,7 +473,9 @@
       <div class="phone-wrap">
         <video class="phone-video" id="phone-video"
                src="phone-flip.mp4"
+               autoplay
                muted
+               loop
                playsinline
                preload="auto"
                aria-hidden="true"></video>
@@ -540,19 +542,7 @@ function updateSphere() {
   if (scrollYvh > 210) beat3.classList.add('in');
   else beat3.classList.remove('in');
 
-  // beat-3 phone spin video — scroll scrubs video.currentTime across scene-3
-  const phoneVideo = document.getElementById('phone-video');
-  if (phoneVideo && phoneVideo.duration && !isNaN(phoneVideo.duration)) {
-    const FLIP_START = 220;
-    const FLIP_END   = 350;
-    const raw = Math.max(0, Math.min(1, (scrollYvh - FLIP_START) / (FLIP_END - FLIP_START)));
-    const eased = easeInOutCubic(raw);
-    const t = eased * phoneVideo.duration;
-    // avoid tiny redundant seeks (< 30ms diff)
-    if (Math.abs(phoneVideo.currentTime - t) > 0.03) {
-      try { phoneVideo.currentTime = t; } catch (e) { /* not seekable yet */ }
-    }
-  }
+  // phone video plays on its own (autoplay + loop) — no scrubbing needed
 
   rafPending = null;
 }
