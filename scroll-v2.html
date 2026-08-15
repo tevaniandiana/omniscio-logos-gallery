@@ -28,6 +28,7 @@
     --sphere-x: 0vw;
     --sphere-y: 118vh;
     --sphere-scale: 2.5;
+    --sphere-opacity: 1;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -100,11 +101,13 @@
       translate(-50%, -50%)
       translate3d(var(--sphere-x), var(--sphere-y), 0)
       scale(var(--sphere-scale));
+    opacity: var(--sphere-opacity);
     z-index: 5;
     pointer-events: none;
-    will-change: transform, filter;
+    will-change: transform, filter, opacity;
     filter: drop-shadow(0 0 60px rgba(91, 227, 255, 0.20)) drop-shadow(0 0 120px rgba(123, 63, 255, 0.15));
     animation: sphereGlow 7s ease-in-out infinite;
+    transition: opacity 400ms ease;
   }
   @keyframes sphereGlow {
     0%, 100% { filter: drop-shadow(0 0 60px rgba(91, 227, 255, 0.20)) drop-shadow(0 0 120px rgba(123, 63, 255, 0.15)); }
@@ -129,7 +132,7 @@
   /* SCENES */
   section { position: relative; width: 100%; z-index: 10; }
   .scene-1 { height: 130vh; padding: 0 6vw; }
-  .scene-2 { height: 220vh; padding: 0; }
+  .scene-2 { height: 160vh; padding: 0; }
 
   /* BEAT 1 · "Omniscio is for people addicted to leverage." */
   .beat-1 {
@@ -227,7 +230,7 @@
     50%      { opacity: 0.78; transform: translate(-50%, 8px); }
   }
 
-  /* BEAT 2 · "You, times a thousand." + giant 1,00[SPHERE]×" */
+  /* BEAT 2 · Clean editorial type · setup line → massive "1,000×" → rotating role */
   .beat-2 {
     position: sticky;
     top: 0;
@@ -237,71 +240,67 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 0 4vw;
+    padding: 0 6vw;
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(28px);
     transition: opacity 900ms ease, transform 900ms ease;
     z-index: 15;
+    gap: clamp(28px, 4.5vh, 60px);
   }
   .beat-2.in { opacity: 1; transform: translateY(0); }
 
-  .beat-2 .promise {
+  /* small setup line (mist) — like v6's "You can't watch fifty screens." */
+  .beat-2 .setup {
     font-family: var(--font-brand);
     font-weight: 500;
-    font-size: clamp(20px, 2.6vw, 34px);
-    letter-spacing: -0.012em;
-    color: var(--text);
-    margin-bottom: 5vh;
-    opacity: 0.92;
+    font-size: clamp(24px, 2.6vw, 42px);
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    color: var(--text-dim);
+    max-width: 20ch;
   }
 
-  /* the massive number — sphere lands as the middle zero */
+  /* the massive number — bright aurora gradient, the bold statement */
   .beat-2 .number {
     font-family: var(--font-brand);
     font-weight: 700;
-    font-size: clamp(120px, 22vw, 340px);
-    line-height: 0.9;
-    letter-spacing: -0.05em;
-    color: var(--text);
+    font-size: clamp(140px, 22vw, 340px);
+    line-height: 0.88;
+    letter-spacing: -0.055em;
+    background: linear-gradient(96deg, var(--accent-a) 0%, var(--accent-b) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    padding-bottom: 0.08em; /* prevents descender clipping in webkit */
     display: inline-flex;
     align-items: baseline;
     justify-content: center;
-    /* shift so the ghost-zero (middle "0") sits roughly at viewport-center X */
-    transform: translateX(-4.2vw);
-    text-shadow: 0 0 100px rgba(91, 227, 255, 0.10), 0 0 200px rgba(123, 63, 255, 0.08);
-  }
-  .beat-2 .number .ghost-zero {
-    /* keeps layout width, visually invisible — sphere sits over this slot */
-    visibility: hidden;
-    display: inline-block;
   }
   .beat-2 .number .mult {
-    font-weight: 500;
     color: var(--text-dim);
-    margin-left: 0.02em;
-    font-size: 0.66em;
-    line-height: 1;
+    -webkit-text-fill-color: var(--text-dim);
+    font-weight: 500;
+    font-size: 0.6em;
     letter-spacing: -0.02em;
+    margin-left: 0.04em;
+    line-height: 1;
   }
 
-  /* rotating role beneath the number */
+  /* rotating role beneath the number — auto-cycles independent of scroll */
   .beat-2 .roles {
     position: relative;
-    margin-top: 5.5vh;
-    height: 2.2em;
+    height: 1.6em;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(24px, 3vw, 46px);
   }
   .beat-2 .roles .role {
     position: absolute;
     top: 0; left: 50%;
-    transform: translateX(-50%) translateY(12px);
+    transform: translate(-50%, 12px);
     font-family: var(--font-brand);
     font-weight: 500;
-    font-size: clamp(22px, 2.8vw, 40px);
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
     color: var(--text);
     white-space: nowrap;
     opacity: 0;
@@ -309,11 +308,11 @@
   }
   .beat-2 .roles .role.active {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translate(-50%, 0);
   }
   .beat-2 .roles .role .prefix {
     color: var(--text-dim);
-    margin-right: 0.32em;
+    margin-right: 0.3em;
     font-weight: 400;
   }
   .beat-2 .roles .role .accent {
@@ -321,12 +320,12 @@
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    font-weight: 600;
   }
 
-  /* fine tuning for very narrow viewports */
   @media (max-width: 600px) {
-    .beat-2 .number { transform: translateX(-3vw); font-size: clamp(90px, 26vw, 200px); }
-    .beat-1 h1 { font-size: clamp(34px, 8vw, 62px); }
+    .beat-2 .number { font-size: clamp(96px, 26vw, 180px); }
+    .beat-1 h1 { font-size: clamp(36px, 9vw, 72px); }
   }
 </style>
 </head>
@@ -358,11 +357,11 @@
   <div class="scroll-hint">Scroll</div>
 </section>
 
-<!-- Beat 2 · The promise · sphere becomes the middle zero of 1,000× -->
+<!-- Beat 2 · Clean editorial typography · setup line, giant "1,000×", rotating role -->
 <section class="scene-2">
   <div class="beat-2" id="beat2">
-    <p class="promise">You, times a thousand.</p>
-    <h1 class="number" aria-label="1,000 times">1,00<span class="ghost-zero">0</span>0<span class="mult">×</span></h1>
+    <p class="setup">You, times a thousand.</p>
+    <h1 class="number" aria-label="1,000 times">1,000<span class="mult">×</span></h1>
     <div class="roles" aria-hidden="true">
       <span class="role" data-i="0"><span class="prefix">the</span><span class="accent">engineer</span></span>
       <span class="role" data-i="1"><span class="prefix">the</span><span class="accent">marketer</span></span>
@@ -380,11 +379,11 @@
    ================================================================== */
 
 const KEYFRAMES = [
-  // scrollY in vh · x/vw · y/vh · scale
-  { s: 0,    x: 0, y: 118, scale: 2.5  },  // hero moon-rise
-  { s: 60,   x: 0, y: 118, scale: 2.5  },  // hold beat 1
-  { s: 155,  x: 0, y: -4,  scale: 0.22 },  // sphere lands as the zero
-  { s: 900,  x: 0, y: -4,  scale: 0.22 }   // hold beat 2
+  // scrollY in vh · x/vw · y/vh · scale · opacity
+  { s: 0,   x: 0, y: 118, scale: 2.5, o: 1 },  // beat 1 · hero moon-rise
+  { s: 55,  x: 0, y: 118, scale: 2.5, o: 1 },  // hold beat 1
+  { s: 100, x: 0, y: 60,  scale: 1.4, o: 0 },  // sphere shrinks + fades away
+  { s: 900, x: 0, y: 60,  scale: 1.4, o: 0 }   // beat 2 · sphere hidden (pure type)
 ];
 
 const easeInOutCubic = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2;
@@ -410,15 +409,17 @@ function updateSphere() {
   const x = prev.x + (next.x - prev.x) * t;
   const y = prev.y + (next.y - prev.y) * t;
   const s = prev.scale + (next.scale - prev.scale) * t;
+  const o = prev.o + (next.o - prev.o) * t;
 
   const root = document.documentElement;
   root.style.setProperty('--sphere-x', x + 'vw');
   root.style.setProperty('--sphere-y', y + 'vh');
   root.style.setProperty('--sphere-scale', s);
+  root.style.setProperty('--sphere-opacity', o);
 
-  // fade beat-2 copy in once we're deep enough into scene 2
+  // fade beat-2 copy in as we approach it
   const beat2 = document.getElementById('beat2');
-  if (scrollYvh > 120) beat2.classList.add('in');
+  if (scrollYvh > 90) beat2.classList.add('in');
   else beat2.classList.remove('in');
 
   rafPending = null;
