@@ -148,11 +148,11 @@
   .beat-1 h1 {
     font-family: var(--font-brand);
     font-weight: 700;
-    font-size: clamp(44px, 6.2vw, 96px);
-    line-height: 1.06;
-    letter-spacing: -0.03em;
+    font-size: clamp(66px, 9.3vw, 144px);
+    line-height: 1.02;
+    letter-spacing: -0.038em;
     color: var(--text);
-    max-width: 20ch;
+    max-width: 24ch;
     text-shadow: 0 4px 40px rgba(8, 9, 15, 0.6);
   }
   .beat-1 h1 .accent {
@@ -161,37 +161,91 @@
     background-clip: text;
     color: transparent;
   }
+
+  /* Ref-style magic download button:
+     - Dark near-black fill (#0B0D14)
+     - Neon cyan→violet border that slowly rotates (always)
+     - Twinkling particle field inside the pill
+     - Big soft outer glow
+     - Hover: gradient rotation speeds up + glow intensifies */
+  @property --btn-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
   .beat-1 .btn.download {
-    margin-top: clamp(28px, 4.5vh, 44px);
+    --btn-angle: 0deg;
+    position: relative;
+    isolation: isolate;
+    margin-top: clamp(32px, 5vh, 48px);
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 15px 32px;
+    gap: 11px;
+    padding: 16px 34px;
     border-radius: 999px;
-    background: linear-gradient(96deg, var(--accent-a) 0%, var(--accent-b) 100%);
-    color: #08090F;
+    border: 1.6px solid transparent;
+    background:
+      linear-gradient(#0B0D14, #0B0D14) padding-box,
+      conic-gradient(
+        from var(--btn-angle),
+        var(--accent-a),
+        var(--accent-b),
+        var(--accent-a)
+      ) border-box;
+    color: var(--text);
     text-decoration: none;
     font-family: var(--font-body);
     font-weight: 600;
-    font-size: 15px;
-    letter-spacing: 0.005em;
-    border: 0;
-    box-shadow:
-      0 8px 26px rgba(91, 227, 255, 0.24),
-      0 8px 26px rgba(123, 63, 255, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.28);
-    transition: transform 220ms ease, box-shadow 240ms ease;
+    font-size: 17px;
+    letter-spacing: 0.01em;
     cursor: pointer;
-  }
-  .beat-1 .btn.download:hover {
-    transform: translateY(-2px);
     box-shadow:
-      0 14px 40px rgba(91, 227, 255, 0.36),
-      0 14px 40px rgba(123, 63, 255, 0.28),
-      inset 0 1px 0 rgba(255, 255, 255, 0.28);
+      0 0 28px rgba(91, 227, 255, 0.30),
+      0 0 60px rgba(123, 63, 255, 0.22);
+    animation: btnRotate 8s linear infinite;
+    transition: transform 220ms ease, box-shadow 320ms ease;
+  }
+  @keyframes btnRotate {
+    to { --btn-angle: 360deg; }
+  }
+
+  /* twinkling particles inside the pill */
+  .beat-1 .btn.download::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 999px;
+    background:
+      radial-gradient(1.5px circle at 12% 34%, rgba(255,255,255,0.85), transparent 60%),
+      radial-gradient(1px circle at 68% 22%, rgba(91,227,255,0.75), transparent 60%),
+      radial-gradient(1.3px circle at 44% 68%, rgba(123,63,255,0.7),  transparent 60%),
+      radial-gradient(1px circle at 82% 58%, rgba(255,255,255,0.6),   transparent 60%),
+      radial-gradient(1.4px circle at 25% 75%, rgba(91,227,255,0.6),  transparent 60%),
+      radial-gradient(0.9px circle at 55% 40%, rgba(255,255,255,0.7), transparent 60%),
+      radial-gradient(1.1px circle at 88% 30%, rgba(123,63,255,0.6),  transparent 60%),
+      radial-gradient(0.75px circle at 35% 55%, rgba(255,255,255,0.5),transparent 60%),
+      radial-gradient(1.2px circle at 78% 80%, rgba(91,227,255,0.55), transparent 60%),
+      radial-gradient(0.85px circle at 6% 60%, rgba(255,255,255,0.6), transparent 60%);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.85;
+    animation: btnTwinkle 4.2s ease-in-out infinite;
+  }
+  @keyframes btnTwinkle {
+    0%, 100% { opacity: 0.5; }
+    35%      { opacity: 0.95; }
+    70%      { opacity: 0.65; }
+  }
+
+  .beat-1 .btn.download:hover {
+    transform: translateY(-1px);
+    animation-duration: 3s; /* gradient speeds up as it swirls */
+    box-shadow:
+      0 0 48px rgba(91, 227, 255, 0.55),
+      0 0 100px rgba(123, 63, 255, 0.42);
   }
   .beat-1 .btn.download:active { transform: translateY(0); }
-  .beat-1 .btn.download svg { flex: none; }
+  .beat-1 .btn.download svg { flex: none; opacity: 0.95; }
   .scroll-hint {
     position: absolute;
     bottom: 6vh; left: 50%;
