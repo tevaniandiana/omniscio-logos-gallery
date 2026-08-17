@@ -362,21 +362,16 @@
     height: 470vh;
     z-index: 10;
   }
-  /* position:fixed + JS visibility toggle — guaranteed to pin regardless of sticky ancestor quirks */
+  /* position:sticky — pin scrolls out naturally with its parent section
+     (no trailing black gap after the animation completes) */
   .hscroll-pin {
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
     z-index: 15;
-    visibility: hidden;
-    pointer-events: none;
-  }
-  .hscroll-pin.active {
-    visibility: visible;
-    pointer-events: auto;
   }
   .hscroll-track {
     display: flex;
@@ -600,7 +595,7 @@
   section.scene {
     position: relative;
     width: 100%;
-    padding: 14vh 6vw;
+    padding: 6vh 6vw;
     z-index: 10;
   }
   section.scene.tall { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
@@ -944,6 +939,66 @@
     gap: 56px;
     align-items: center;
     margin-top: 72px;
+  }
+  /* Beat 02 centered variant — text above, terminals + suggestion centered below,
+     with a full uncut purple bloom sitting behind the mock */
+  .s-factory-scene { overflow: hidden; }
+  .s-factory-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 56px;
+    max-width: 1100px;
+    margin: 24px auto 0;
+  }
+  .s-factory-centered .col-copy {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .s-factory-centered .col-copy .scene-headline {
+    max-width: none;
+    margin: 0 auto;
+    text-align: center;
+    font-size: clamp(40px, 4.8vw, 72px);
+  }
+  .s-factory-centered .col-copy .scene-sub {
+    max-width: 640px;
+    margin: 20px auto 0;
+    text-align: center;
+  }
+  .s-factory-centered .col-mock {
+    position: relative;
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .s-factory-centered .factory-grid {
+    width: 100%;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .s-factory-centered .suggestion-card {
+    margin: 0 auto;
+    text-align: left;
+  }
+  .s-factory-centered .factory-glow {
+    position: absolute;
+    inset: -80px -120px -140px -120px;
+    background:
+      radial-gradient(50% 45% at 50% 40%, rgba(123,63,255,0.42) 0%, rgba(123,63,255,0.18) 40%, transparent 75%),
+      radial-gradient(60% 55% at 50% 80%, rgba(91,227,255,0.16) 0%, transparent 70%);
+    filter: blur(30px);
+    pointer-events: none;
+    z-index: -1;
+  }
+  @media (max-width: 860px) {
+    .s-factory-centered { gap: 36px; }
+    .s-factory-centered .factory-glow { inset: -40px -20px -80px -20px; }
   }
   .factory-grid {
     display: grid;
@@ -1840,7 +1895,7 @@
     <span class="eyebrow"><span class="dot"></span>01 · One place, one language</span>
     <div class="s-inbox">
       <div class="col-copy">
-        <h2 class="scene-headline" style="margin-top:20px;">Every agent in <span class="accent-grad">one inbox</span>. Every reply in <span class="accent-grad">plain English</span>.</h2>
+        <h2 class="scene-headline" style="margin-top:20px;">Every agent<br>in <span class="accent-grad">one inbox</span>.<br>Every reply<br>in <span class="accent-grad">plain English</span>.</h2>
         <p class="scene-sub">A hundred parallel sessions collapse into a single stream. When something needs you, Omniscio translates the machine's error into a sentence — with a suggested fix and one tap to approve.</p>
       </div>
 
@@ -1917,15 +1972,15 @@
 </section>
 
 <!-- ================ SECTION 2 · A team that ships in parallel ================ -->
-<section class="scene">
+<section class="scene s-factory-scene">
   <div class="scene-inner">
-    <span class="eyebrow"><span class="dot"></span>02 · Parallel work + self-authoring automation</span>
-    <div class="s-factory">
+    <div class="s-factory-centered">
       <div class="col-copy">
-        <h2 class="scene-headline" style="margin-top:20px;">A whole team, <span class="accent-grad">shipping in parallel</span> — and writing its own automations.</h2>
+        <h2 class="scene-headline">A whole team, <span class="accent-grad">shipping in parallel</span><br>— and writing its own automations.</h2>
         <p class="scene-sub">Agents work on real tasks while you sleep. Cron and event triggers keep the loop running without you. When Omniscio spots a pattern you're doing by hand, it drafts the automation and asks once.</p>
       </div>
       <div class="col-mock">
+        <div class="factory-glow" aria-hidden="true"></div>
         <div class="factory-grid">
           <div class="work-tile done">
             <div class="agent-name">Ada · backend</div>
