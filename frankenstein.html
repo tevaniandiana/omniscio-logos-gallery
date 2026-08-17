@@ -362,16 +362,24 @@
     height: 470vh;
     z-index: 10;
   }
-  /* position:sticky — pin scrolls out naturally with its parent section
-     (no trailing black gap after the animation completes) */
+  /* position:fixed + JS visibility toggle. Pin stays visible for the full
+     duration the section is in view (see JS `inView` — hRect.top<=0 && hRect.bottom>0),
+     so "Delegate. Decide. Done." dwells on-screen through the section's trailing
+     window instead of disappearing into a black gap. */
   .hscroll-pin {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     height: 100vh;
     width: 100vw;
     overflow: hidden;
     z-index: 15;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .hscroll-pin.active {
+    visibility: visible;
+    pointer-events: auto;
   }
   .hscroll-track {
     display: flex;
@@ -953,14 +961,21 @@
     margin: 24px auto 0;
   }
   .s-factory-centered .col-copy {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
   }
   .s-factory-centered .col-copy .scene-headline {
     max-width: none;
     margin: 0 auto;
     text-align: center;
-    font-size: clamp(40px, 4.8vw, 72px);
+    font-size: clamp(26px, 3.1vw, 46px);
+    line-height: 1.1;
+    white-space: normal;
+  }
+  @media (max-width: 720px) {
+    .s-factory-centered .col-copy .scene-headline {
+      font-size: clamp(22px, 5vw, 30px);
+    }
   }
   .s-factory-centered .col-copy .scene-sub {
     max-width: 640px;
@@ -2003,15 +2018,6 @@
             <div class="progress done"><span style="width:100%"></span></div>
           </div>
         </div>
-        <div class="suggestion-card" style="margin-top:20px;">
-          <div class="from"><span class="dot"></span>Omniscio suggests</div>
-          <div class="prompt">"You've triaged the last 6 Slack bug reports by hand. Want me to auto-triage from #bugs → Linear, and only ping you on P0?"</div>
-          <div class="actions">
-            <button class="primary">Yes, wire it up</button>
-            <button>Show the diff</button>
-            <button>Not now</button>
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -2272,7 +2278,11 @@ function updateSphere() {
     const hRect     = hsection.getBoundingClientRect();
     const hTotal    = hsection.offsetHeight - window.innerHeight;
     const hProgress = Math.max(0, Math.min(1, (-hRect.top) / hTotal));
-    const inView    = hRect.top <= 0 && hRect.bottom > window.innerHeight;
+    // Keep pin visible for the full duration the section is above viewport top.
+    // (Was `hRect.bottom > window.innerHeight`, which killed the pin the moment
+    // the animation completed, leaving a 100vh black gap. Now Delegate dwells
+    // on-screen through the trailing window until the section fully exits.)
+    const inView    = hRect.top <= 0 && hRect.bottom > 0;
 
     const pinEl = document.querySelector('.hscroll-pin');
     if (pinEl) {
