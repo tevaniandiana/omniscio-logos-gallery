@@ -351,76 +351,121 @@
     font-weight: 700;
   }
 
-  /* BEAT 3 · "Run a hundred agents from your phone." — copy left, phone right */
-  .beat-3 {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 6vw;
-    opacity: 0;
-    transform: translateY(28px);
-    transition: opacity 900ms ease, transform 900ms ease;
-    z-index: 15;
-  }
-  .beat-3.in { opacity: 1; transform: translateY(0); }
-  .beat-3-inner {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(48px, 6vw, 120px);
-    max-width: 1400px;
+  /* HSCROLL · Replaces old Beat 3
+     Pinned horizontal-scroll section: two panels of copy that slide past a
+     persistent phone video. Dwell → transition → dwell pacing driven by JS. */
+  .scene-hscroll {
+    position: relative;
     width: 100%;
+    /* Section height = viewport (100vh) + action-scroll (370vh) = 470vh.
+       Sticky child pins for the 370vh action window: dwell-1 (100vh) + transition (150vh) + dwell-2 (120vh). */
+    height: 470vh;
+    z-index: 10;
   }
-  .beat-3 .copy {
-    flex: 1;
-    max-width: 14ch;
+  /* position:fixed + JS visibility toggle — guaranteed to pin regardless of sticky ancestor quirks */
+  .hscroll-pin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    z-index: 15;
+    visibility: hidden;
+    pointer-events: none;
   }
-  .beat-3 .copy h2 {
+  .hscroll-pin.active {
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .hscroll-track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+    will-change: transform;
+  }
+  .hpanel {
+    width: 100vw;
+    height: 100vh;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    /* generous side padding — text sits noticeably inset from viewport edges */
+    padding: 0 14vw;
+  }
+  .hpanel-1 { justify-content: flex-start; }
+  .hpanel-2 { justify-content: flex-end; }
+
+  .hpanel h2 {
     font-family: var(--font-brand);
     font-weight: 700;
+    /* matches Beat 1 hero scale — Cabinet Grotesk 700, Beat 1 clamp(52px, 7.4vw, 112px) */
     font-size: clamp(48px, 6vw, 104px);
     line-height: 1.04;
     letter-spacing: -0.035em;
     color: var(--text);
+    max-width: 14ch;
   }
-  .beat-3 .copy h2 .accent {
+  .hpanel-2 h2 { text-align: right; }
+  .hpanel h2 .accent {
     background: linear-gradient(96deg, var(--accent-a) 0%, var(--accent-b) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
   }
 
-  /* THE PHONE — real 3D spinning phone video, scrubbed by scroll */
-  .beat-3 .phone-wrap {
-    flex: none;
-    width: clamp(320px, 30vw, 520px);
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    border-radius: 10px;
+  /* Persistent phone image — drifts from right → mirror-left position across the transition */
+  .hphones {
+    position: absolute;
+    top: 50%;
+    right: 14vw;
+    transform: translateY(-50%);
+    width: min(30vw, 420px);
+    z-index: 6;
+    will-change: transform;
     filter: drop-shadow(0 30px 80px rgba(0, 0, 0, 0.5))
-            drop-shadow(0 0 60px rgba(91, 227, 255, 0.15))
-            drop-shadow(0 0 100px rgba(123, 63, 255, 0.15));
+            drop-shadow(0 0 60px rgba(91, 227, 255, 0.10))
+            drop-shadow(0 0 100px rgba(123, 63, 255, 0.12));
   }
-  .beat-3 .phone-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .hphones img {
     display: block;
+    width: 100%;
+    height: auto;
+    user-select: none;
+    -webkit-user-drag: none;
   }
 
-  @media (max-width: 860px) {
-    .beat-3-inner { flex-direction: column; gap: 40px; }
-    .beat-3 .copy { max-width: 100%; text-align: center; }
+  /* Fallback: stack vertically on narrow viewports and reduced-motion — no pinning, no horizontal scroll */
+  @media (max-width: 860px), (prefers-reduced-motion: reduce) {
+    .scene-hscroll { height: auto; }
+    .hscroll-pin { position: relative; height: auto; overflow: visible; }
+    .hscroll-track {
+      flex-direction: column;
+      width: 100%;
+      transform: none !important;
+    }
+    .hpanel {
+      width: 100%; height: auto;
+      padding: 12vh 6vw;
+      justify-content: center !important;
+    }
+    .hpanel h2, .hpanel-2 h2 {
+      text-align: center;
+      max-width: 100%;
+    }
+    .hphones {
+      position: relative;
+      top: auto; right: auto;
+      transform: none !important;
+      margin: 4vh auto;
+    }
   }
 
   @media (max-width: 600px) {
     .beat-2 .number { font-size: clamp(96px, 26vw, 200px); }
     .beat-2 .roles { font-size: clamp(30px, 8vw, 52px); }
     .beat-1 h1 { font-size: clamp(36px, 9vw, 72px); }
-    .beat-3 .copy h2 { font-size: clamp(36px, 9vw, 60px); }
+    .hpanel h2 { font-size: clamp(36px, 9vw, 60px); }
   }
 </style>
 </head>
@@ -430,6 +475,7 @@
   <a href="#" class="brand">Omniscio</a>
   <a href="#" class="nav-download">Download</a>
 </nav>
+
 
 <!-- Sphere floats above everything, position + scale driven by scroll -->
 <div class="sphere-stage" aria-hidden="true">
@@ -463,23 +509,20 @@
   </div>
 </section>
 
-<!-- Beat 3 · Run a hundred agents from your phone · copy + tilted phone mockup -->
-<section class="scene-3">
-  <div class="beat-3" id="beat3">
-    <div class="beat-3-inner">
-      <div class="copy">
+<!-- Horizontal scroll section · Replaces old Beat 3.
+     Panel 1 (headline left, phone right) slides horizontally to Panel 2 (headline right, phone drifted left) with dwell frames on each side so viewers can read. -->
+<section class="scene-hscroll" id="scene-hscroll">
+  <div class="hscroll-pin">
+    <div class="hscroll-track" id="hscroll-track">
+      <div class="hpanel hpanel-1">
         <h2>Run a hundred agents<br><span class="accent">from your phone</span>.</h2>
       </div>
-      <div class="phone-wrap">
-        <video class="phone-video" id="phone-video"
-               src="phone-flip.mp4"
-               autoplay
-               muted
-               loop
-               playsinline
-               preload="auto"
-               aria-hidden="true"></video>
+      <div class="hpanel hpanel-2">
+        <h2>Delegate.<br>Decide.<br><span class="accent">Done.</span><br>Do it again.</h2>
       </div>
+    </div>
+    <div class="hphones" id="hphones">
+      <img src="phone-omniscio-inbox.png" alt="Omniscio inbox on iPhone" />
     </div>
   </div>
 </section>
@@ -497,8 +540,8 @@ const KEYFRAMES = [
   { s: 25,  x: 0,  y: 112, scale: 2.44, o: 0.95 },  // subtle rise as you scroll
   { s: 70,  x: 0,  y: 55,  scale: 1.4,  o: 0    },  // sphere fades away
   { s: 200, x: 0,  y: 55,  scale: 1.4,  o: 0    },  // beat 2 · sphere hidden
-  { s: 250, x: 30, y: 30,  scale: 0.34, o: 1    },  // beat 3 · sphere returns small bottom-right
-  { s: 900, x: 30, y: 30,  scale: 0.34, o: 1    }   // hold beat 3
+  { s: 250, x: 30, y: 30,  scale: 0.34, o: 0    },  // hscroll section · sphere stays hidden
+  { s: 900, x: 30, y: 30,  scale: 0.34, o: 0    }   // hold hidden
 ];
 
 const easeInOutCubic = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3) / 2;
@@ -537,12 +580,44 @@ function updateSphere() {
   if (scrollYvh > 50) beat2.classList.add('in');
   else beat2.classList.remove('in');
 
-  // fade beat-3 in as we approach scene-3
-  const beat3 = document.getElementById('beat3');
-  if (scrollYvh > 210) beat3.classList.add('in');
-  else beat3.classList.remove('in');
+  // HSCROLL — position:fixed pin, activated when section is in view
+  // Segments (in % of section scroll): dwell-1 (100/370) → transition (150/370) → dwell-2 (120/370)
+  const hsection = document.getElementById('scene-hscroll');
+  const hscrollActive = hsection && !window.matchMedia('(max-width: 860px)').matches
+                                 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (hscrollActive) {
+    const hRect     = hsection.getBoundingClientRect();
+    const hTotal    = hsection.offsetHeight - window.innerHeight;
+    const hProgress = Math.max(0, Math.min(1, (-hRect.top) / hTotal));
+    const inView    = hRect.top <= 0 && hRect.bottom > window.innerHeight;
 
-  // phone video plays on its own (autoplay + loop) — no scrubbing needed
+    const pinEl = document.querySelector('.hscroll-pin');
+    if (pinEl) {
+      if (inView) pinEl.classList.add('active');
+      else pinEl.classList.remove('active');
+    }
+
+    const D1_END = 100 / 370;
+    const T_END  = 250 / 370;
+
+    let hT;
+    if (hProgress < D1_END)      hT = 0;
+    else if (hProgress < T_END)  hT = easeInOutCubic((hProgress - D1_END) / (T_END - D1_END));
+    else                         hT = 1;
+
+    const hTrack  = document.getElementById('hscroll-track');
+    const hPhones = document.getElementById('hphones');
+    if (hTrack && hPhones) {
+      const trackDist  = hTrack.scrollWidth - window.innerWidth;
+      const pStartLeft = hPhones.offsetLeft;
+      const pWidth     = hPhones.offsetWidth;
+      const pEndLeft   = window.innerWidth - pStartLeft - pWidth;
+      const pDist      = pEndLeft - pStartLeft;
+
+      hTrack.style.transform  = `translateX(${-trackDist * hT}px)`;
+      hPhones.style.transform = `translate(${pDist * hT}px, -50%)`;
+    }
+  }
 
   rafPending = null;
 }
