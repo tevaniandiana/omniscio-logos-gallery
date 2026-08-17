@@ -943,6 +943,7 @@
   /* Beat 02 centered variant — text above, terminals + suggestion centered below,
      with a full uncut purple bloom sitting behind the mock */
   .s-factory-scene { overflow: hidden; }
+  .s-factory-scene .scene-inner { max-width: none; }
   .s-factory-centered {
     display: flex;
     flex-direction: column;
@@ -953,16 +954,24 @@
     margin: 24px auto 0;
   }
   .s-factory-centered .col-copy {
-    max-width: 1400px;
+    max-width: none;
     margin: 0 auto;
   }
   /* Keep the standard .scene-headline font-size / weight / letter-spacing
-     for consistency with every other beat — only override max-width so the
-     two long sentences can extend across the wider centered container. */
+     for consistency with every other beat. Force each half (split by <br>)
+     to stay on ONE line so the headline reads as exactly 2 lines at full size. */
   .s-factory-centered .col-copy .scene-headline {
     max-width: none;
     margin: 0 auto;
     text-align: center;
+    white-space: nowrap;
+  }
+  /* On very narrow viewports, allow wrapping so it doesn't overflow off-screen */
+  @media (max-width: 900px) {
+    .s-factory-centered .col-copy .scene-headline {
+      white-space: normal;
+      font-size: clamp(30px, 6vw, 44px);
+    }
   }
   .s-factory-centered .col-copy .scene-sub {
     max-width: 640px;
