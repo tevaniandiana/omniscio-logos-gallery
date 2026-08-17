@@ -381,28 +381,7 @@
     overflow: hidden;
     z-index: 15;
   }
-  /* Full-bleed wide image behind the HSCROLL text panels.
-     Scaled to fill viewport height; overflows viewport width; pans horizontally. */
-  .hbg {
-    position: absolute;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    z-index: 5;
-    pointer-events: none;
-  }
-  .hbg img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: auto;
-    max-width: none;
-    display: block;
-    will-change: transform;
-  }
-  .hpanel { position: relative; z-index: 6; }
+  /* (removed: .hbg wide-image pan — replaced by per-panel mockups) */
 
   .hscroll-track {
     display: flex;
@@ -414,25 +393,86 @@
     width: 100vw;
     height: 100vh;
     flex-shrink: 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: clamp(40px, 6vw, 120px);
     align-items: center;
-    /* generous side padding — text sits noticeably inset from viewport edges */
-    padding: 0 14vw;
+    padding: 0 8vw;
   }
-  .hpanel-1 { justify-content: flex-start; }
-  .hpanel-2 { justify-content: flex-end; }
+  .hpanel-copy { min-width: 0; display: flex; }
+  .hpanel-mock { min-width: 0; display: flex; justify-content: center; align-items: center; }
+  .hpanel-1 .hpanel-copy { justify-content: flex-start; }
+  .hpanel-2 .hpanel-copy { justify-content: flex-end; }
 
   .hpanel h2 {
     font-family: var(--font-brand);
     font-weight: 700;
-    /* matches Beat 1 hero scale — Cabinet Grotesk 700, Beat 1 clamp(52px, 7.4vw, 112px) */
-    font-size: clamp(48px, 6vw, 104px);
+    font-size: clamp(44px, 5vw, 88px);
     line-height: 1.04;
     letter-spacing: -0.035em;
     color: var(--text);
     max-width: 14ch;
   }
   .hpanel-2 h2 { text-align: right; }
+
+  /* Panel-scoped mock sizing so cloned Beat 01/02 mocks don't overflow the viewport */
+  .hp-terminals {
+    width: 100%;
+    max-width: 560px;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .hp-inbox {
+    width: 100%;
+    max-width: 620px;
+  }
+  /* Blink pulse on live status dot */
+  .hp-live .agent-name::before {
+    content: "";
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent-a);
+    box-shadow: 0 0 10px var(--accent-a);
+    margin-right: 8px;
+    vertical-align: middle;
+    animation: hpBlink 1.4s ease-in-out infinite;
+  }
+  @keyframes hpBlink {
+    0%, 100% { opacity: 0.35; box-shadow: 0 0 4px var(--accent-a); }
+    50%      { opacity: 1;    box-shadow: 0 0 14px var(--accent-a); }
+  }
+  /* Progress bars fill toward their target on loop */
+  .hp-terminals .progress span {
+    width: 0;
+    animation: hpFill 4s ease-in-out infinite;
+  }
+  .hp-terminals .work-tile:nth-child(1) .progress span { animation-delay: 0s; }
+  .hp-terminals .work-tile:nth-child(2) .progress span { animation-delay: 0.6s; }
+  .hp-terminals .work-tile:nth-child(3) .progress span { animation-delay: 1.2s; }
+  .hp-terminals .work-tile:nth-child(4) .progress span { animation-delay: 1.8s; }
+  @keyframes hpFill {
+    0%   { width: 0; }
+    60%  { width: var(--target, 100%); }
+    100% { width: var(--target, 100%); }
+  }
+  /* Cycling row highlight in the inbox — one row glows every 2s */
+  .hp-inbox .inbox-row {
+    transition: background 400ms ease, transform 400ms ease;
+    animation: hpRowPulse 10s linear infinite;
+  }
+  .hp-inbox .inbox-row:nth-child(1) { animation-delay: 0s; }
+  .hp-inbox .inbox-row:nth-child(2) { animation-delay: 2s; }
+  .hp-inbox .inbox-row:nth-child(3) { animation-delay: 4s; }
+  .hp-inbox .inbox-row:nth-child(4) { animation-delay: 6s; }
+  .hp-inbox .inbox-row:nth-child(5) { animation-delay: 8s; }
+  @keyframes hpRowPulse {
+    0%, 15%, 100% { background: transparent; }
+    5%            { background: rgba(91,227,255,0.10); }
+  }
+  .hp-inbox .row-status.live {
+    animation: hpBlink 1.4s ease-in-out infinite;
+  }
   .hpanel h2 .accent {
     background: linear-gradient(96deg, var(--accent-a) 0%, var(--accent-b) 100%);
     -webkit-background-clip: text;
@@ -1920,17 +1960,92 @@
   <div class="hscroll-pin">
     <div class="hscroll-track" id="hscroll-track">
       <div class="hpanel hpanel-1">
-        <h2>Run a hundred agents<br><span class="accent">from your phone</span>.</h2>
+        <div class="hpanel-copy">
+          <h2>Run a hundred agents<br><span class="accent">from your phone</span>.</h2>
+        </div>
+        <div class="hpanel-mock">
+          <!-- Cloned terminals grid — with live blinking + animated progress bars -->
+          <div class="factory-grid hp-terminals">
+            <div class="work-tile done">
+              <div class="agent-name">Ada · backend</div>
+              <div class="task">Ship auth refactor · 12 files · 340 loc</div>
+              <div class="progress done"><span style="--target:100%"></span></div>
+            </div>
+            <div class="work-tile hp-live">
+              <div class="agent-name">Kepler · content</div>
+              <div class="task">Draft launch email · 3 variants</div>
+              <div class="progress"><span style="--target:64%"></span></div>
+            </div>
+            <div class="work-tile hp-live">
+              <div class="agent-name">Turing · analytics</div>
+              <div class="task">Weekly ARR report from Stripe</div>
+              <div class="progress"><span style="--target:84%"></span></div>
+            </div>
+            <div class="work-tile done">
+              <div class="agent-name">Bode · support</div>
+              <div class="task">Group 14 Sentry bugs · 4 root causes</div>
+              <div class="progress done"><span style="--target:100%"></span></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="hpanel hpanel-2">
-        <h2>Delegate.<br>Decide.<br><span class="accent">Done.</span><br>Do it again.</h2>
+        <div class="hpanel-mock">
+          <!-- Cloned inbox mockup — with cycling row highlight -->
+          <div class="inbox-mock hp-inbox">
+            <div class="inbox-head">
+              <div class="traffic"><span></span><span></span><span></span></div>
+              <div class="title">Inbox</div>
+              <div class="count">18 sessions · 3 need you</div>
+            </div>
+            <div class="inbox-rows">
+              <div class="inbox-row lift">
+                <div class="row-status live"></div>
+                <div class="row-body">
+                  <div class="title-line"><strong>Refactor auth module</strong><span class="tag">Backend · Ada</span></div>
+                  <div class="snippet"><span class="accent">Needs approval:</span> ship migration + rollback plan attached.</div>
+                </div>
+                <div class="row-time">just now</div>
+              </div>
+              <div class="inbox-row">
+                <div class="row-status done"></div>
+                <div class="row-body">
+                  <div class="title-line"><strong>Draft launch email</strong><span class="tag">Marketing · Kepler</span></div>
+                  <div class="snippet">Three variants ready — subject A/B included.</div>
+                </div>
+                <div class="row-time">2m</div>
+              </div>
+              <div class="inbox-row">
+                <div class="row-status wait"></div>
+                <div class="row-body">
+                  <div class="title-line"><strong>Bug triage · Sentry</strong><span class="tag">Support · Bode</span></div>
+                  <div class="snippet">14 issues grouped into 4 root causes.</div>
+                </div>
+                <div class="row-time">6m</div>
+              </div>
+              <div class="inbox-row">
+                <div class="row-status live"></div>
+                <div class="row-body">
+                  <div class="title-line"><strong>Weekly ARR report</strong><span class="tag">Analytics · Turing</span></div>
+                  <div class="snippet">Pulling from Stripe + BigQuery — 84% done.</div>
+                </div>
+                <div class="row-time">running</div>
+              </div>
+              <div class="inbox-row">
+                <div class="row-status done"></div>
+                <div class="row-body">
+                  <div class="title-line"><strong>PR review · #4021</strong><span class="tag">Backend · Ada</span></div>
+                  <div class="snippet">Approved with 2 style nits inline.</div>
+                </div>
+                <div class="row-time">12m</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hpanel-copy">
+          <h2>Delegate.<br>Decide.<br><span class="accent">Done.</span><br>Do it again.</h2>
+        </div>
       </div>
-    </div>
-    <!-- Full-bleed wide image behind the text panels. Scaled to fill
-         viewport height; extends past viewport width; pans horizontally as
-         the HSCROLL animation progresses. -->
-    <div class="hbg" id="hbg" aria-hidden="true">
-      <img src="group-26.jpg" alt="" />
     </div>
   </div>
 </section>
@@ -2332,17 +2447,9 @@ function updateSphere() {
     else                         hT = 1;
 
     const hTrack = document.getElementById('hscroll-track');
-    const hBg    = document.querySelector('#hbg img');
     if (hTrack) {
       const trackDist = hTrack.scrollWidth - window.innerWidth;
       hTrack.style.transform = `translateX(${-trackDist * hT}px)`;
-    }
-    if (hBg) {
-      // Image is scaled to 100vh; typically overflows viewport width.
-      // Pan left by (imageWidth - viewport) as scroll progresses.
-      const bgWidth  = hBg.offsetWidth;
-      const bgTravel = Math.max(0, bgWidth - window.innerWidth);
-      hBg.style.transform = `translateX(${-bgTravel * hT}px)`;
     }
   }
 
